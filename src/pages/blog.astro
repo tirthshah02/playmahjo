@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allPosts = await Astro.glob('../**/*.md');
+const sorted = allPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+---
+<BaseLayout title="All Articles — Mahjo" description="Every Mahjong article on Mahjo — learn, strategy, variants, and community.">
+  <div class="category-header">
+    <div class="container--narrow">
+      <span class="category-header__icon">📚</span>
+      <h1>All Articles</h1>
+      <p style="color: var(--text3); margin-top: 0.75rem;">Everything we've written about Mahjong, in one place.</p>
+    </div>
+  </div>
+
+  <div class="container" style="padding-bottom: 5rem;">
+    <div class="card-grid">
+      {sorted.map(post => (
+        <a href={post.url} class="card">
+          <div class="card__meta">
+            <span class={`category-pill category-pill--${post.frontmatter.category}`}>
+              {post.frontmatter.category}
+            </span>
+            <span class="card__date">{new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+          </div>
+          <h3 class="card__title">{post.frontmatter.title}</h3>
+          <p class="card__excerpt">{post.frontmatter.description}</p>
+          <span class="card__read-more">Read →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

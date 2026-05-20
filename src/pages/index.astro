@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const allPosts = await Astro.glob('../**/*.md');
+const sorted = allPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+const featured = sorted[0];
+const recent = sorted.slice(1, 7);
+
+const categories = [
+  { slug: 'learn', label: 'Learn', icon: '🀄', desc: 'Rules, scoring, and how to play — for beginners and returning players alike.' },
+  { slug: 'strategy', label: 'Strategy', icon: '♟️', desc: 'Hand-building theory, reading the table, and thinking several moves ahead.' },
+  { slug: 'variants', label: 'Variants', icon: '🌏', desc: 'Hong Kong, American, Riichi, Taiwanese — every major style explained.' },
+  { slug: 'community', label: 'Community', icon: '🤝', desc: 'Club spotlights, player stories, and the culture around the tiles.' },
+];
+---
+<BaseLayout>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero__eyebrow">The Mahjong knowledge hub</span>
+      <h1 class="hero__title">
+        Learn the game.<br/>
+        <span class="gold">Master the table.</span>
+      </h1>
+      <p class="hero__subtitle">
+        Strategy guides, rules breakdowns, and stories for serious Mahjong players. Written by players, for players.
+      </p>
+      <div class="hero__actions">
+        <a href="/learn" class="btn btn--gold">Start Learning →</a>
+        <a href="https://mahjo.app" class="btn btn--outline" target="_blank">Play Mahjo Free ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section style="padding: 3rem 0;">
+    <div class="container">
+      <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;">
+        {categories.map(cat => (
+          <a href={`/${cat.slug}`} class="card" style="gap: 0.5rem; padding: 1.5rem;">
+            <span style="font-size: 1.75rem;">{cat.icon}</span>
+            <h3 style="font-size: 1.1rem; margin: 0;">{cat.label}</h3>
+            <p style="font-size: 0.85rem; margin: 0; color: var(--text3);">{cat.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured post -->
+  {featured && (
+    <section style="padding: 2rem 0;">
+      <div class="container">
+        <div class="section-header">
+          <h2>Featured</h2>
+        </div>
+        <a href={featured.url} class="card card--featured">
+          <div class="card__body">
+            <div class="card__meta">
+              <span class={`category-pill category-pill--${featured.frontmatter.category}`}>
+                {featured.frontmatter.category}
+              </span>
+              <span class="card__date">{new Date(featured.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+            </div>
+            <h2 class="card__title">{featured.frontmatter.title}</h2>
+            <p class="card__excerpt">{featured.frontmatter.description}</p>
+            <span class="card__read-more">Read article →</span>
+          </div>
+        </a>
+      </div>
+    </section>
+  )}
+
+  <!-- Recent posts -->
+  {recent.length > 0 && (
+    <section style="padding: 2rem 0 4rem;">
+      <div class="container">
+        <div class="section-header">
+          <h2>Recent Articles</h2>
+          <a href="/blog">View all →</a>
+        </div>
+        <div class="card-grid">
+          {recent.map(post => (
+            <a href={post.url} class="card">
+              <div class="card__meta">
+                <span class={`category-pill category-pill--${post.frontmatter.category}`}>
+                  {post.frontmatter.category}
+                </span>
+                <span class="card__date">{new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+              </div>
+              <h3 class="card__title">{post.frontmatter.title}</h3>
+              <p class="card__excerpt">{post.frontmatter.description}</p>
+              <span class="card__read-more">Read →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Play CTA banner -->
+  <section style="padding: 0 1.5rem 5rem;">
+    <div class="container">
+      <div style="background: linear-gradient(135deg, rgba(15,111,90,0.25), rgba(168,137,77,0.1)); border: 1px solid rgba(168,137,77,0.25); border-radius: 16px; padding: 3rem 2rem; text-align: center;">
+        <h2 style="font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: 0.75rem;">Ready to play real Mahjong?</h2>
+        <p style="color: var(--text3); max-width: 480px; margin: 0 auto 2rem; font-size: 0.95rem;">Mahjo is multiplayer Mahjong that actually works — no tile-matching, no shortcuts. Just the real game, online.</p>
+        <a href="https://mahjo.app" class="btn btn--gold" target="_blank">Play for Free ↗</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
