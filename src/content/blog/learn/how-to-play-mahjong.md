@@ -59,4 +59,4 @@ This is just the beginning. Real Mahjong has layers of strategy around:
 - Blocking other players while building your own hand
 - Knowing when to chase a big hand versus a safe quick win
 
-The best way to learn is to play. **[Try Mahjo](https://mahjo.app)** — it's free, it's real Mahjong, and the bots will give you a proper game while you're finding your feet.
+The best way to learn is to play. **[Try Mahjo](https://www.mahjo.app)** — it's free, it's real Mahjong, and the bots will give you a proper game while you're finding your feet.

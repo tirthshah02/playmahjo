@@ -36,7 +36,7 @@ Strong clubs tend to have:
 
 One of the most common frustrations club members share: the desire to play between weekly sessions, with no way to get a real game going. You can't always find three other people at short notice.
 
-That's exactly the gap Mahjo was built for — real Mahjong you can play any time, with friends or with bots, without needing to coordinate four schedules. **[Try it free](https://mahjo.app)**.
+That's exactly the gap Mahjo was built for — real Mahjong you can play any time, with friends or with bots, without needing to coordinate four schedules. **[Try it free](https://www.mahjo.app)**.
 
 ## The Game Endures
 

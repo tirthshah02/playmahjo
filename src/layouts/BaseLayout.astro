@@ -5,6 +5,14 @@ const currentPath = Astro.url.pathname;
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQ06Z6CFQQ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KQ06Z6CFQQ');
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
@@ -24,7 +32,7 @@ const currentPath = Astro.url.pathname;
         <li><a href="/variants" class={currentPath.startsWith('/variants') ? 'active' : ''}>Variants</a></li>
         <li><a href="/community" class={currentPath.startsWith('/community') ? 'active' : ''}>Community</a></li>
         <li><a href="/blog" class={currentPath.startsWith('/blog') ? 'active' : ''}>All Posts</a></li>
-        <li><a href="https://mahjo.app" class="nav__cta" target="_blank">Play Free ↗</a></li>
+        <li><a href="https://www.mahjo.app" class="nav__cta" target="_blank">Play Free ↗</a></li>
       </ul>
     </div>
   </nav>
@@ -40,7 +48,7 @@ const currentPath = Astro.url.pathname;
       <li><a href="/strategy">Strategy</a></li>
       <li><a href="/variants">Variants</a></li>
       <li><a href="/community">Community</a></li>
-      <li><a href="https://mahjo.app" target="_blank">Play Mahjo</a></li>
+      <li><a href="https://www.mahjo.app" target="_blank">Play Mahjo</a></li>
     </ul>
     <p class="footer__copy">© {new Date().getFullYear()} Mahjo. Real Mahjong, online.</p>
   </footer>

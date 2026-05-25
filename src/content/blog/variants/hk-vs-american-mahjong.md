@@ -47,4 +47,4 @@ If your family plays one style, learn that one. Community matters more than whic
 
 If you're starting fresh, **Hong Kong Mahjong** gives you a more internationally transferable foundation — it's closer to the standard game played across Asia. Once you understand it, picking up American or Riichi becomes much easier.
 
-**[Mahjo](https://mahjo.app)** currently supports Hong Kong-style Mahjong. American Mahjong is on the roadmap.
+**[Mahjo](https://www.mahjo.app)** currently supports Hong Kong-style Mahjong. American Mahjong is on the roadmap.
