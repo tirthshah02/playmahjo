@@ -2,7 +2,7 @@
 layout: '../../layouts/ArticleLayout.astro'
 title: "How to Play Mahjong Online: Everything You Need to Know"
 description: "The complete guide to playing real Mahjong online — how it works, what platforms to use, how online play differs from in-person, and tips for getting started."
-date: "2025-05-25"
+date: "2025-05-26"
 category: "community"
 readTime: 9
 faqs:

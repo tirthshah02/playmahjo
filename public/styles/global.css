@@ -278,6 +278,7 @@ img { max-width: 100%; border-radius: var(--radius); }
   align-items: center;
   gap: 0.5rem;
   padding: 0.7rem 1.6rem;
+  min-height: 44px;
   border-radius: var(--radius);
   font-family: var(--font-ui);
   font-weight: 600;
@@ -431,6 +432,9 @@ img { max-width: 100%; border-radius: var(--radius); }
 .prose p + p { margin-top: 0; }
 
 .prose table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
   border-collapse: collapse;
   margin: 2rem 0;
@@ -742,6 +746,27 @@ img { max-width: 100%; border-radius: var(--radius); }
 .nav__hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .nav__hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* ── Mid-article CTA ── */
+.article-mid-cta {
+  margin: 2.5rem 0;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, rgba(15,111,90,0.15), rgba(168,137,77,0.08));
+  border: 1px solid rgba(168,137,77,0.28);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.article-mid-cta__text {
+  color: var(--text2);
+  font-size: 0.95rem;
+  margin: 0;
+  flex: 1;
+}
+
 /* ── Read time badge on cards ── */
 .card__read-time {
   font-family: var(--font-mono);
@@ -876,6 +901,8 @@ img { max-width: 100%; border-radius: var(--radius); }
 
 /* ── Responsive ── */
 @media (max-width: 680px) {
+  body { font-size: 16px; }
+
   .nav__hamburger { display: flex; }
 
   .nav__links {
@@ -892,11 +919,50 @@ img { max-width: 100%; border-radius: var(--radius); }
     gap: 0.25rem;
   }
   .nav__links.open { display: flex; }
-  .nav__links a { padding: 0.65rem 1rem; font-size: 0.9rem; }
-  .nav__cta { text-align: center; margin-top: 0.5rem; }
+  .nav__links a { padding: 0.65rem 1rem; font-size: 0.9rem; min-height: 44px; display: flex; align-items: center; }
+  .nav__cta { text-align: center; margin-top: 0.5rem; justify-content: center; }
 
   .nav__inner { position: relative; }
 
+  .hero { padding: 2.75rem 1.25rem 2.25rem; }
+  .hero__tiles { display: none; }
+
+  .article-header { padding: 2.5rem 1.25rem 1.5rem; margin-bottom: 2rem; }
+
+  .article-layout { padding: 0 1rem 3rem; }
+
+  .cta-section { padding: 0 1rem 3rem; }
+  .cta-banner { padding: 2rem 1.25rem; }
+
+  .footer { margin-top: 3.5rem; padding: 2rem 1rem; }
+
+  .container { padding: 0 1rem; }
+  .container--narrow { padding: 0 1rem; }
+
+  /* Filter tabs scroll horizontally instead of wrapping — cleaner on phones */
+  .filter-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.75rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filter-tabs::-webkit-scrollbar { display: none; }
+
   .card--featured { flex-direction: column; }
   .card-grid { grid-template-columns: 1fr; }
+
+  .related-posts__grid { grid-template-columns: 1fr; }
+
+  .category-cards { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Extra-small phones (≤ 400px) ── */
+@media (max-width: 400px) {
+  .hero__actions { flex-direction: column; align-items: stretch; }
+  .hero__actions .btn { width: 100%; justify-content: center; }
+
+  .category-cards { grid-template-columns: 1fr; }
+
+  .article-faq { padding: 1.25rem 1rem; }
 }

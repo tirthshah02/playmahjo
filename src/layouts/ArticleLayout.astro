@@ -52,6 +52,17 @@ const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
     }
   }))
 }) : null;
+
+const categoryLabel = categoryLabels[category] || category;
+const breadcrumbSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://playmahjo.com" },
+    { "@type": "ListItem", "position": 2, "name": categoryLabel, "item": `https://playmahjo.com/${category}` },
+    { "@type": "ListItem", "position": 3, "name": title }
+  ]
+});
 ---
 <BaseLayout title={`${title} — Mahjo`} description={description}>
   <Fragment slot="head">
@@ -70,6 +81,7 @@ const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
     <meta name="twitter:image" content="https://playmahjo.com/og-image.svg" />
     <script type="application/ld+json" set:html={articleSchema} />
     {faqSchema && <script type="application/ld+json" set:html={faqSchema} />}
+    <script type="application/ld+json" set:html={breadcrumbSchema} />
   </Fragment>
 
   <div class="article-header">
@@ -123,7 +135,7 @@ const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
 
       <div class="article-cta">
         <p class="article-cta__prompt">Ready to put this into practice?</p>
-        <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank">Play Real Mahjong on Mahjo ↗</a>
+        <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank" data-ga="article_bottom_cta">Play Real Mahjong on Mahjo ↗</a>
       </div>
     </div>
 
@@ -139,6 +151,19 @@ const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
       const tocList = document.getElementById('toc-list');
       const tocSidebar = document.getElementById('article-toc');
       if (!prose || !tocList || !tocSidebar) return;
+
+      // Mid-article CTA after ~halfway through paragraphs (only if article is long enough)
+      const paras = Array.from(prose.querySelectorAll('p'));
+      if (paras.length >= 6) {
+        const insertAfter = paras[Math.floor(paras.length / 2)];
+        const mid = document.createElement('div');
+        mid.className = 'article-mid-cta';
+        mid.innerHTML = `
+          <p class="article-mid-cta__text">Want to practice what you're learning?</p>
+          <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank" data-ga="mid_cta">Play Mahjo Free ↗</a>
+        `;
+        insertAfter.insertAdjacentElement('afterend', mid);
+      }
 
       const headings = Array.from(prose.querySelectorAll('h2, h3')) as HTMLElement[];
       if (headings.length < 3) {
@@ -226,5 +251,10 @@ const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
     color: var(--text-secondary, #a0a0b0);
     margin: 0;
     line-height: 1.65;
+  }
+
+  @media (max-width: 680px) {
+    .article-faq { padding: 1.5rem 1.25rem; }
+    .article-faq__heading { font-size: 1.2rem; }
   }
 </style>
