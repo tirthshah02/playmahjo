@@ -1,6 +1,11 @@
 ---
-const { title = 'Play Mahjo — Learn & Love Mahjong', description = 'Strategy guides, rules, variants, and stories for serious Mahjong players.' } = Astro.props;
+const {
+  title = 'Mahjo — The Mahjong Knowledge Hub',
+  description = 'Strategy guides, rules, variants, and stories for serious Mahjong players.',
+} = Astro.props;
 const currentPath = Astro.url.pathname;
+const canonicalUrl = Astro.url.href;
+const ogImage = 'https://playmahjo.com/og-image.svg';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -17,15 +22,42 @@ const currentPath = Astro.url.pathname;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <title>{title}</title>
+
+  <!-- Canonical -->
+  <link rel="canonical" href={canonicalUrl} />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="Mahjo" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="Mahjo RSS Feed" href="/rss.xml" />
+
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="/styles/global.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <slot name="head" />
 </head>
 <body>
   <nav class="nav">
     <div class="nav__inner">
-      <a href="/" class="nav__logo">Mahjo <span>/ learn mahjong</span></a>
+      <a href="/" class="nav__logo">Mahjo</a>
+      <button class="nav__hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <ul class="nav__links">
         <li><a href="/learn" class={currentPath.startsWith('/learn') ? 'active' : ''}>Learn</a></li>
         <li><a href="/strategy" class={currentPath.startsWith('/strategy') ? 'active' : ''}>Strategy</a></li>
@@ -36,6 +68,23 @@ const currentPath = Astro.url.pathname;
       </ul>
     </div>
   </nav>
+
+  <script>
+    const hamburger = document.querySelector('.nav__hamburger');
+    const navLinks = document.querySelector('.nav__links');
+    hamburger?.addEventListener('click', () => {
+      const open = navLinks?.classList.toggle('open');
+      hamburger.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', String(open));
+    });
+    navLinks?.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        hamburger?.classList.remove('open');
+        hamburger?.setAttribute('aria-expanded', 'false');
+      });
+    });
+  </script>
 
   <main>
     <slot />

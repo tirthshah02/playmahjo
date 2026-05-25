@@ -1,41 +1,175 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 const { frontmatter } = Astro.props;
-const { title, description, date, category, readTime } = frontmatter;
+const { title, description, category, readTime, date, faqs } = frontmatter;
 
-const categoryLabels = {
+const categoryLabels: Record<string, string> = {
   learn: 'Learn',
   strategy: 'Strategy',
   variants: 'Variants',
   community: 'Community',
 };
 
-const formattedDate = new Date(date).toLocaleDateString('en-US', {
-  year: 'numeric', month: 'long', day: 'numeric'
+const allPosts = await Astro.glob('../pages/**/*.md');
+const related = allPosts
+  .filter(p => p.frontmatter.category === category && p.frontmatter.title !== title)
+  .slice(0, 3);
+
+const canonicalUrl = Astro.url.href;
+
+const articleSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "datePublished": date,
+  "dateModified": date,
+  "author": {
+    "@type": "Organization",
+    "name": "Mahjo",
+    "url": "https://www.mahjo.app"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mahjo",
+    "url": "https://www.mahjo.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalUrl
+  }
 });
+
+const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((faq: { q: string; a: string }) => ({
+    "@type": "Question",
+    "name": faq.q,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.a
+    }
+  }))
+}) : null;
 ---
 <BaseLayout title={`${title} — Mahjo`} description={description}>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={`${title} — Mahjo`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content="https://playmahjo.com/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {date && <meta property="article:published_time" content={new Date(date).toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} — Mahjo`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://playmahjo.com/og-image.svg" />
+    <script type="application/ld+json" set:html={articleSchema} />
+    {faqSchema && <script type="application/ld+json" set:html={faqSchema} />}
+  </Fragment>
+
   <div class="article-header">
     <div class="container--narrow">
       <a href={`/${category}`} class={`category-pill category-pill--${category}`}>
         {categoryLabels[category] || category}
       </a>
       <h1 class="article-header__title">{title}</h1>
-      <div class="article-header__meta">
-        <span>📅 {formattedDate}</span>
-        {readTime && <span>⏱ {readTime} min read</span>}
-      </div>
+      {readTime && (
+        <div class="article-header__meta">
+          <span>⏱ {readTime} min read</span>
+        </div>
+      )}
     </div>
   </div>
 
-  <div class="container--narrow" style="padding-bottom: 5rem;">
+  <div class="container--narrow article-body">
     <article class="prose">
       <slot />
     </article>
 
-    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(168,137,77,0.2); text-align: center;">
-      <p style="color: var(--text3); font-size: 0.9rem; margin-bottom: 1.25rem;">Ready to put this into practice?</p>
+    {faqs && faqs.length > 0 && (
+      <div class="article-faq">
+        <h2 class="article-faq__heading">Frequently Asked Questions</h2>
+        <div class="article-faq__list">
+          {faqs.map((faq: { q: string; a: string }) => (
+            <div class="article-faq__item">
+              <h3 class="article-faq__q">{faq.q}</h3>
+              <p class="article-faq__a">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {related.length > 0 && (
+      <div class="related-posts">
+        <h3 class="related-posts__heading">More in {categoryLabels[category]}</h3>
+        <div class="related-posts__grid">
+          {related.map(post => (
+            <a href={post.url} class="card related-card">
+              <h4 class="card__title">{post.frontmatter.title}</h4>
+              <p class="card__excerpt">{post.frontmatter.description}</p>
+              <span class="card__read-more">Read →</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <div class="article-cta">
+      <p class="article-cta__prompt">Ready to put this into practice?</p>
       <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank">Play Real Mahjong on Mahjo ↗</a>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .article-faq {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: var(--surface, #1a1a2e);
+    border: 1px solid var(--border, rgba(255,255,255,0.08));
+    border-radius: 12px;
+  }
+
+  .article-faq__heading {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem;
+    color: var(--gold, #c9a84c);
+  }
+
+  .article-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .article-faq__item {
+    border-bottom: 1px solid var(--border, rgba(255,255,255,0.06));
+    padding-bottom: 1.25rem;
+  }
+
+  .article-faq__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .article-faq__q {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+    color: var(--text-primary, #f0f0f0);
+  }
+
+  .article-faq__a {
+    font-size: 0.95rem;
+    color: var(--text-secondary, #a0a0b0);
+    margin: 0;
+    line-height: 1.65;
+  }
+</style>

@@ -20,9 +20,6 @@ const posts = allPosts
       <div class="card-grid">
         {posts.map(post => (
           <a href={post.url} class="card">
-            <div class="card__meta">
-              <span class="card__date">{new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
-            </div>
             <h3 class="card__title">{post.frontmatter.title}</h3>
             <p class="card__excerpt">{post.frontmatter.description}</p>
             <span class="card__read-more">Read →</span>

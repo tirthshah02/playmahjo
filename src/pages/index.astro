@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const allPosts = await Astro.glob('../**/*.md');
+const allPosts = await Astro.glob('./**/*.md');
 const sorted = allPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
 const featured = sorted[0];
 const recent = sorted.slice(1, 7);
@@ -16,6 +16,13 @@ const categories = [
 <BaseLayout>
   <!-- Hero -->
   <section class="hero">
+    <div class="hero__tiles" aria-hidden="true">
+      <span class="hero__tile hero__tile--1">🀇</span>
+      <span class="hero__tile hero__tile--2">🀙</span>
+      <span class="hero__tile hero__tile--3">🀄</span>
+      <span class="hero__tile hero__tile--4">🀅</span>
+      <span class="hero__tile hero__tile--5">🀃</span>
+    </div>
     <div class="container">
       <span class="hero__eyebrow">The Mahjong knowledge hub</span>
       <h1 class="hero__title">
@@ -33,14 +40,14 @@ const categories = [
   </section>
 
   <!-- Categories -->
-  <section style="padding: 3rem 0;">
+  <section class="categories-section">
     <div class="container">
-      <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;">
+      <div class="category-cards">
         {categories.map(cat => (
-          <a href={`/${cat.slug}`} class="card" style="gap: 0.5rem; padding: 1.5rem;">
-            <span style="font-size: 1.75rem;">{cat.icon}</span>
-            <h3 style="font-size: 1.1rem; margin: 0;">{cat.label}</h3>
-            <p style="font-size: 0.85rem; margin: 0; color: var(--text3);">{cat.desc}</p>
+          <a href={`/${cat.slug}`} class={`category-card category-card--${cat.slug}`}>
+            <span class="category-card__icon">{cat.icon}</span>
+            <h3 class="category-card__label">{cat.label}</h3>
+            <p class="category-card__desc">{cat.desc}</p>
           </a>
         ))}
       </div>
@@ -49,7 +56,7 @@ const categories = [
 
   <!-- Featured post -->
   {featured && (
-    <section style="padding: 2rem 0;">
+    <section class="home-section">
       <div class="container">
         <div class="section-header">
           <h2>Featured</h2>
@@ -60,7 +67,6 @@ const categories = [
               <span class={`category-pill category-pill--${featured.frontmatter.category}`}>
                 {featured.frontmatter.category}
               </span>
-              <span class="card__date">{new Date(featured.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
             </div>
             <h2 class="card__title">{featured.frontmatter.title}</h2>
             <p class="card__excerpt">{featured.frontmatter.description}</p>
@@ -73,7 +79,7 @@ const categories = [
 
   <!-- Recent posts -->
   {recent.length > 0 && (
-    <section style="padding: 2rem 0 4rem;">
+    <section class="home-section home-section--spaced">
       <div class="container">
         <div class="section-header">
           <h2>Recent Articles</h2>
@@ -86,7 +92,6 @@ const categories = [
                 <span class={`category-pill category-pill--${post.frontmatter.category}`}>
                   {post.frontmatter.category}
                 </span>
-                <span class="card__date">{new Date(post.frontmatter.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
               </div>
               <h3 class="card__title">{post.frontmatter.title}</h3>
               <p class="card__excerpt">{post.frontmatter.description}</p>
@@ -99,11 +104,11 @@ const categories = [
   )}
 
   <!-- Play CTA banner -->
-  <section style="padding: 0 1.5rem 5rem;">
+  <section class="cta-section">
     <div class="container">
-      <div style="background: linear-gradient(135deg, rgba(15,111,90,0.25), rgba(168,137,77,0.1)); border: 1px solid rgba(168,137,77,0.25); border-radius: 16px; padding: 3rem 2rem; text-align: center;">
-        <h2 style="font-size: clamp(1.6rem, 4vw, 2.4rem); margin-bottom: 0.75rem;">Ready to play real Mahjong?</h2>
-        <p style="color: var(--text3); max-width: 480px; margin: 0 auto 2rem; font-size: 0.95rem;">Mahjo is multiplayer Mahjong that actually works — no tile-matching, no shortcuts. Just the real game, online.</p>
+      <div class="cta-banner">
+        <h2 class="cta-banner__title">Ready to play real Mahjong?</h2>
+        <p class="cta-banner__body">Mahjo is multiplayer Mahjong that actually works — no tile-matching, no shortcuts. Just the real game, online.</p>
         <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank">Play for Free ↗</a>
       </div>
     </div>
