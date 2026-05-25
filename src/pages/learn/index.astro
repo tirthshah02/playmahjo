@@ -1,9 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
 const allPosts = await Astro.glob('../../**/*.md');
 const posts = allPosts
   .filter(p => p.frontmatter.category === 'learn')
-  .sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+  .sort((a, b) => (b.frontmatter.readTime || 0) - (a.frontmatter.readTime || 0));
+
+const [featured, ...rest] = posts;
 ---
 <BaseLayout title="Learn Mahjong — Mahjo" description="Rules, scoring, and fundamentals for every level of player.">
   <div class="category-header">
@@ -13,19 +16,43 @@ const posts = allPosts
       <p style="color: var(--text3); margin-top: 0.75rem;">Rules, scoring, and fundamentals for every level of player.</p>
     </div>
   </div>
+
   <div class="container" style="padding-bottom: 5rem;">
     {posts.length === 0 ? (
       <p class="text-center text-muted" style="padding: 3rem 0;">Articles coming soon.</p>
     ) : (
-      <div class="card-grid">
-        {posts.map(post => (
-          <a href={post.url} class="card">
-            <h3 class="card__title">{post.frontmatter.title}</h3>
-            <p class="card__excerpt">{post.frontmatter.description}</p>
-            <span class="card__read-more">Read →</span>
+      <>
+        {featured && (
+          <a href={featured.url} class="card card--featured card--featured-cat">
+            <div class="card__body">
+              <div class="card__meta">
+                {featured.frontmatter.readTime && (
+                  <span class="card__read-time">⏱ {featured.frontmatter.readTime} min read</span>
+                )}
+              </div>
+              <h2 class="card__title">{featured.frontmatter.title}</h2>
+              <p class="card__excerpt">{featured.frontmatter.description}</p>
+              <span class="card__read-more">Read article →</span>
+            </div>
           </a>
-        ))}
-      </div>
+        )}
+        {rest.length > 0 && (
+          <div class="card-grid">
+            {rest.map(post => (
+              <a href={post.url} class="card">
+                <div class="card__meta">
+                  {post.frontmatter.readTime && (
+                    <span class="card__read-time">⏱ {post.frontmatter.readTime} min</span>
+                  )}
+                </div>
+                <h3 class="card__title">{post.frontmatter.title}</h3>
+                <p class="card__excerpt">{post.frontmatter.description}</p>
+                <span class="card__read-more">Read →</span>
+              </a>
+            ))}
+          </div>
+        )}
+      </>
     )}
   </div>
 </BaseLayout>

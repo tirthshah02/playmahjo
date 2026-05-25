@@ -86,45 +86,100 @@ const faqSchema = faqs && faqs.length > 0 ? JSON.stringify({
     </div>
   </div>
 
-  <div class="container--narrow article-body">
-    <article class="prose">
-      <slot />
-    </article>
+  <div class="article-layout">
+    <div class="article-layout__main">
+      <article class="prose">
+        <slot />
+      </article>
 
-    {faqs && faqs.length > 0 && (
-      <div class="article-faq">
-        <h2 class="article-faq__heading">Frequently Asked Questions</h2>
-        <div class="article-faq__list">
-          {faqs.map((faq: { q: string; a: string }) => (
-            <div class="article-faq__item">
-              <h3 class="article-faq__q">{faq.q}</h3>
-              <p class="article-faq__a">{faq.a}</p>
-            </div>
-          ))}
+      {faqs && faqs.length > 0 && (
+        <div class="article-faq">
+          <h2 class="article-faq__heading">Frequently Asked Questions</h2>
+          <div class="article-faq__list">
+            {faqs.map((faq: { q: string; a: string }) => (
+              <div class="article-faq__item">
+                <h3 class="article-faq__q">{faq.q}</h3>
+                <p class="article-faq__a">{faq.a}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
-    {related.length > 0 && (
-      <div class="related-posts">
-        <h3 class="related-posts__heading">More in {categoryLabels[category]}</h3>
-        <div class="related-posts__grid">
-          {related.map(post => (
-            <a href={post.url} class="card related-card">
-              <h4 class="card__title">{post.frontmatter.title}</h4>
-              <p class="card__excerpt">{post.frontmatter.description}</p>
-              <span class="card__read-more">Read →</span>
-            </a>
-          ))}
+      {related.length > 0 && (
+        <div class="related-posts">
+          <h3 class="related-posts__heading">More in {categoryLabels[category]}</h3>
+          <div class="related-posts__grid">
+            {related.map(post => (
+              <a href={post.url} class="card related-card">
+                <h4 class="card__title">{post.frontmatter.title}</h4>
+                <p class="card__excerpt">{post.frontmatter.description}</p>
+                <span class="card__read-more">Read →</span>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )}
 
-    <div class="article-cta">
-      <p class="article-cta__prompt">Ready to put this into practice?</p>
-      <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank">Play Real Mahjong on Mahjo ↗</a>
+      <div class="article-cta">
+        <p class="article-cta__prompt">Ready to put this into practice?</p>
+        <a href="https://www.mahjo.app" class="btn btn--gold" target="_blank">Play Real Mahjong on Mahjo ↗</a>
+      </div>
     </div>
+
+    <aside class="article-toc" id="article-toc" aria-label="Table of contents">
+      <p class="article-toc__heading">On this page</p>
+      <ol class="article-toc__list" id="toc-list"></ol>
+    </aside>
   </div>
+
+  <script>
+    (function () {
+      const prose = document.querySelector('.prose');
+      const tocList = document.getElementById('toc-list');
+      const tocSidebar = document.getElementById('article-toc');
+      if (!prose || !tocList || !tocSidebar) return;
+
+      const headings = Array.from(prose.querySelectorAll('h2, h3')) as HTMLElement[];
+      if (headings.length < 3) {
+        tocSidebar.remove();
+        return;
+      }
+
+      headings.forEach((h, i) => {
+        if (!h.id) {
+          const slug = h.textContent!.trim().toLowerCase()
+            .replace(/[^\w\s-]/g, '').replace(/[\s_]+/g, '-').replace(/^-+|-+$/g, '');
+          h.id = slug || `heading-${i}`;
+        }
+        const li = document.createElement('li');
+        li.className = `article-toc__item article-toc__item--${h.tagName.toLowerCase()}`;
+        const a = document.createElement('a');
+        a.href = `#${h.id}`;
+        a.textContent = h.textContent;
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+
+      function updateActive() {
+        const scrollY = window.scrollY + 110;
+        let active = headings[0];
+        headings.forEach(h => {
+          if (h.getBoundingClientRect().top + window.scrollY <= scrollY) active = h;
+        });
+        tocList.querySelectorAll('.article-toc__item--active').forEach(el =>
+          el.classList.remove('article-toc__item--active')
+        );
+        if (active) {
+          tocList.querySelector(`a[href="#${CSS.escape(active.id)}"]`)
+            ?.parentElement?.classList.add('article-toc__item--active');
+        }
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    })();
+  </script>
 </BaseLayout>
 
 <style>

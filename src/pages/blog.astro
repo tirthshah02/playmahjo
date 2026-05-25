@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const allPosts = await Astro.glob('../**/*.md');
 const sorted = allPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+
+const categories = ['all', 'learn', 'strategy', 'variants', 'community'];
 ---
 <BaseLayout title="All Articles — Mahjo" description="Every Mahjong article on Mahjo — learn, strategy, variants, and community.">
   <div class="category-header">
@@ -14,13 +16,29 @@ const sorted = allPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a
   </div>
 
   <div class="container" style="padding-bottom: 5rem;">
-    <div class="card-grid">
+    <div class="filter-tabs" role="tablist" aria-label="Filter by category">
+      {categories.map(cat => (
+        <button
+          class={`filter-tab${cat === 'all' ? ' filter-tab--active' : ''}`}
+          data-filter={cat}
+          role="tab"
+          aria-selected={cat === 'all' ? 'true' : 'false'}
+        >
+          {cat === 'all' ? 'All' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+        </button>
+      ))}
+    </div>
+
+    <div class="card-grid" id="post-grid">
       {sorted.map(post => (
-        <a href={post.url} class="card">
+        <a href={post.url} class="card" data-category={post.frontmatter.category}>
           <div class="card__meta">
             <span class={`category-pill category-pill--${post.frontmatter.category}`}>
               {post.frontmatter.category}
             </span>
+            {post.frontmatter.readTime && (
+              <span class="card__read-time">⏱ {post.frontmatter.readTime} min</span>
+            )}
           </div>
           <h3 class="card__title">{post.frontmatter.title}</h3>
           <p class="card__excerpt">{post.frontmatter.description}</p>
@@ -29,4 +47,27 @@ const sorted = allPosts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a
       ))}
     </div>
   </div>
+
+  <script>
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+    const cards = document.querySelectorAll<HTMLElement>('#post-grid .card');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const filter = tab.dataset.filter;
+
+        tabs.forEach(t => {
+          t.classList.remove('filter-tab--active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('filter-tab--active');
+        tab.setAttribute('aria-selected', 'true');
+
+        cards.forEach(card => {
+          const show = filter === 'all' || card.dataset.category === filter;
+          card.style.display = show ? '' : 'none';
+        });
+      });
+    });
+  </script>
 </BaseLayout>

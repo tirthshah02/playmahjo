@@ -67,6 +67,9 @@ const categories = [
               <span class={`category-pill category-pill--${featured.frontmatter.category}`}>
                 {featured.frontmatter.category}
               </span>
+              {featured.frontmatter.readTime && (
+                <span class="card__read-time">⏱ {featured.frontmatter.readTime} min read</span>
+              )}
             </div>
             <h2 class="card__title">{featured.frontmatter.title}</h2>
             <p class="card__excerpt">{featured.frontmatter.description}</p>
@@ -92,6 +95,9 @@ const categories = [
                 <span class={`category-pill category-pill--${post.frontmatter.category}`}>
                   {post.frontmatter.category}
                 </span>
+                {post.frontmatter.readTime && (
+                  <span class="card__read-time">⏱ {post.frontmatter.readTime} min</span>
+                )}
               </div>
               <h3 class="card__title">{post.frontmatter.title}</h3>
               <p class="card__excerpt">{post.frontmatter.description}</p>
