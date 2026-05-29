@@ -1,3 +1,49 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+# Canonicalize to trailing slash so sitemap URLs, canonicals, and served URLs all agree
+[[redirects]]
+  from = "/blog"
+  to = "/blog/"
+  status = 301
+
+[[redirects]]
+  from = "/learn"
+  to = "/learn/"
+  status = 301
+
+[[redirects]]
+  from = "/strategy"
+  to = "/strategy/"
+  status = 301
+
+[[redirects]]
+  from = "/variants"
+  to = "/variants/"
+  status = 301
+
+[[redirects]]
+  from = "/community"
+  to = "/community/"
+  status = 301
+
+[[redirects]]
+  from = "/learn/:slug"
+  to = "/learn/:slug/"
+  status = 301
+
+[[redirects]]
+  from = "/strategy/:slug"
+  to = "/strategy/:slug/"
+  status = 301
+
+[[redirects]]
+  from = "/variants/:slug"
+  to = "/variants/:slug/"
+  status = 301
+
+[[redirects]]
+  from = "/community/:slug"
+  to = "/community/:slug/"
+  status = 301

@@ -1,12 +1,12 @@
 const SITE = 'https://playmahjo.com';
 
 const staticRoutes = [
-  { url: '/',          priority: '1.0', changefreq: 'weekly'  },
-  { url: '/blog',      priority: '0.8', changefreq: 'daily'   },
-  { url: '/learn',     priority: '0.8', changefreq: 'weekly'  },
-  { url: '/strategy',  priority: '0.8', changefreq: 'weekly'  },
-  { url: '/variants',  priority: '0.8', changefreq: 'weekly'  },
-  { url: '/community', priority: '0.8', changefreq: 'weekly'  },
+  { url: '/',           priority: '1.0', changefreq: 'weekly'  },
+  { url: '/blog/',      priority: '0.8', changefreq: 'daily'   },
+  { url: '/learn/',     priority: '0.8', changefreq: 'weekly'  },
+  { url: '/strategy/',  priority: '0.8', changefreq: 'weekly'  },
+  { url: '/variants/',  priority: '0.8', changefreq: 'weekly'  },
+  { url: '/community/', priority: '0.8', changefreq: 'weekly'  },
 ];
 
 export async function GET() {
@@ -17,7 +17,7 @@ export async function GET() {
     .map(([path, mod]) => {
       const slug = path.replace(/^\.\//, '').replace(/\.md$/, '');
       return {
-        url: `/${slug}`,
+        url: `/${slug}/`,
         lastmod: mod.frontmatter.date,
         priority: '0.7',
         changefreq: 'monthly',
